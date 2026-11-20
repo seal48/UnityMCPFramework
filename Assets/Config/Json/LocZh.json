@@ -13,5 +13,9 @@
   {"Key": "account_label", "Text": "账号：", "Image": ""},
   {"Key": "password_label", "Text": "密码：", "Image": ""},
   {"Key": "item_sword", "Text": "铁剑", "Image": ""},
-  {"Key": "item_potion", "Text": "红药水", "Image": ""}
+  {"Key": "item_potion", "Text": "红药水", "Image": ""},
+  {"Key": "guide_intro", "Text": "欢迎来到大厅！点击任意位置开始新手引导。", "Image": ""},
+  {"Key": "guide_level", "Text": "这里是你的等级和经验——点击它继续。", "Image": ""},
+  {"Key": "guide_gold", "Text": "这里是金币——点击它继续。", "Image": ""},
+  {"Key": "guide_bag", "Text": "这里是背包——新手引导到此结束，祝游戏愉快！", "Image": ""}
 ]

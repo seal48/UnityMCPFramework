@@ -5,6 +5,32 @@
 //------------------------------------------------------------------------------
 namespace GameFramework.Config
 {
+    /// <summary>GuideAdvance（来源：__enums__.xlsx）。</summary>
+    public enum GuideAdvance
+    {
+        ClickTarget = 1,
+        ClickAny = 2,
+        Timer = 3,
+        Event = 4,
+        Manual = 5,
+    }
+
+    /// <summary>GuideMask（来源：__enums__.xlsx）。</summary>
+    public enum GuideMask
+    {
+        None = 0,
+        RectHole = 1,
+        Full = 2,
+    }
+
+    /// <summary>GuideShape（来源：__enums__.xlsx）。</summary>
+    public enum GuideShape
+    {
+        Rect = 1,
+        RoundRect = 2,
+        Circle = 3,
+    }
+
     /// <summary>ItemQuality（来源：__enums__.xlsx）。</summary>
     public enum ItemQuality
     {

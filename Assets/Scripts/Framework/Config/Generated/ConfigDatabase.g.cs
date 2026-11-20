@@ -11,8 +11,9 @@ namespace GameFramework.Config
     public sealed partial class ConfigDatabase
     {
         /// <summary>所有表的文件名（不含扩展名），客户端用它预加载。</summary>
-        public static readonly string[] TableNames = { "Item", "LocEn", "LocFont", "LocZh", "RedDot", "ServerList", "UISprite" };
+        public static readonly string[] TableNames = { "Guide", "Item", "LocEn", "LocFont", "LocZh", "RedDot", "ServerList", "UISprite" };
 
+        public TbGuide Guide { get; private set; }
         public TbItem Item { get; private set; }
         public TbLocEn LocEn { get; private set; }
         public TbLocFont LocFont { get; private set; }
@@ -23,6 +24,8 @@ namespace GameFramework.Config
 
         partial void LoadTables(Func<string, byte[]> readFile, List<object> loaded)
         {
+            Guide = TbGuide.Read(readFile(TbGuide.FileName));
+            loaded.Add(Guide);
             Item = TbItem.Read(readFile(TbItem.FileName));
             loaded.Add(Item);
             LocEn = TbLocEn.Read(readFile(TbLocEn.FileName));
@@ -41,6 +44,7 @@ namespace GameFramework.Config
 
         partial void ClearTables()
         {
+            Guide = null;
             Item = null;
             LocEn = null;
             LocFont = null;

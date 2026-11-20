@@ -53,6 +53,7 @@ AOT ──► 热更                 // AOT 代码不能静态引用热更程序
 | **改业务代码（热更）** | `HybridCLR/CompileDll/ActiveBuildTarget` → 拷 3 个 DLL 到 `StreamingAssets/HotUpdate/` → 重建资源（红线 9） |
 | **图集打包** | 图片放 `Assets/UI/Atlas/<名>/` → `Tools/UI/图集/从目录创建图集`；配表 `Config/Excel/UISprite.xlsx`（Id→Atlas+Sprite）→ 导出 → 重建资源；运行时 `SpriteAtlases.GetSpriteById(<Id>)` |
 | **红点** | 树在 `Config/Excel/RedDot.xlsx`（Id/ParentId）→ 导出；业务 `RedDot.RegisterCondition(<节点>, ()=>数量)` + `NotifyChanged`；UI 挂 `RedDotBadge` 组件 |
+| **新手引导** | 步骤在 `Config/Excel/Guide.xlsx`（文案在 `LocZh/LocEn`）→ 导出 → 重建资源；进度存服务端玩家属性 `guide_progress`（位掩码，断线重连自动续做）；详见 `Assets/Scripts/Game/Guide/README.md` |
 
 ## 框架能力（一句话各模块）
 

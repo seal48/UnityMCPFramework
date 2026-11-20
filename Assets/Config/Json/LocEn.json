@@ -13,5 +13,9 @@
   {"Key": "account_label", "Text": "Account:", "Image": ""},
   {"Key": "password_label", "Text": "Password:", "Image": ""},
   {"Key": "item_sword", "Text": "Iron Sword", "Image": ""},
-  {"Key": "item_potion", "Text": "Health Potion", "Image": ""}
+  {"Key": "item_potion", "Text": "Health Potion", "Image": ""},
+  {"Key": "guide_intro", "Text": "Welcome to the lobby! Tap anywhere to start the tutorial.", "Image": ""},
+  {"Key": "guide_level", "Text": "This is your level and EXP - tap it to continue.", "Image": ""},
+  {"Key": "guide_gold", "Text": "This is your gold - tap it to continue.", "Image": ""},
+  {"Key": "guide_bag", "Text": "This is your bag - tutorial complete. Have fun!", "Image": ""}
 ]

@@ -39,6 +39,12 @@ namespace GameFramework.Net.Protocol
         // 客户端由 ProtocolHub 收下来，再分给各个 System 处理
         PlayerInfoPush,
         BagChangedPush,
+
+        // ===== 业务协议：新手引导 =====
+        // 引导进度存在服务端玩家属性 GuideAttributes.Progress（位掩码），
+        // 这里只加「上报」和「回送权威值」两条，登录同步继续走 player.info.push 的属性列表。
+        GuideProgressSet,
+        GuideProgressPush,
     }
 
     /// <summary>
@@ -68,6 +74,10 @@ namespace GameFramework.Net.Protocol
             // ---- 业务协议：服务端主动推送 ----
             { ProtocolId.PlayerInfoPush, "player.info.push" },
             { ProtocolId.BagChangedPush, "player.bag.changed" },
+
+            // ---- 业务协议：新手引导 ----
+            { ProtocolId.GuideProgressSet, "guide.progress.set" },
+            { ProtocolId.GuideProgressPush, "guide.progress.push" },
         };
 
         private static readonly Dictionary<string, ProtocolId> Ids = BuildReverseTable();

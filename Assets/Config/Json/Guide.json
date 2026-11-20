@@ -1,0 +1,6 @@
+[
+  {"Id": 1, "Group": "newbie_lobby", "Order": 1, "TargetPanel": "", "TargetNode": "", "TipKey": "guide_intro", "Mask": 2, "Shape": 1, "Radius": 0, "ClickThrough": true, "AdvanceOn": 2, "AdvanceParam": "", "Next": 0, "SkipAllowed": true},
+  {"Id": 2, "Group": "newbie_lobby", "Order": 2, "TargetPanel": "MainPanel", "TargetNode": "LevelText", "TipKey": "guide_level", "Mask": 1, "Shape": 2, "Radius": 10, "ClickThrough": true, "AdvanceOn": 1, "AdvanceParam": "", "Next": 0, "SkipAllowed": true},
+  {"Id": 3, "Group": "newbie_lobby", "Order": 3, "TargetPanel": "MainPanel", "TargetNode": "GoldText", "TipKey": "guide_gold", "Mask": 1, "Shape": 1, "Radius": 0, "ClickThrough": true, "AdvanceOn": 1, "AdvanceParam": "", "Next": 0, "SkipAllowed": true},
+  {"Id": 4, "Group": "newbie_lobby", "Order": 4, "TargetPanel": "MainPanel", "TargetNode": "BagText", "TipKey": "guide_bag", "Mask": 1, "Shape": 2, "Radius": 18, "ClickThrough": true, "AdvanceOn": 1, "AdvanceParam": "", "Next": 0, "SkipAllowed": true}
+]

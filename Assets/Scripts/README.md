@@ -26,6 +26,7 @@ Assets/Scripts/
     ├── Business/               业务系统（PlayerSystem / BagSystem / PlayerModel）
     ├── ServerSelect/           区服列表 / 选服
     ├── Startup/                启动流程（各 Procedure） 
+    ├── Guide/                  新手引导（配表驱动步骤 + 进度存服务端属性，遮罩表现层在 Framework/UIFramework/GuideOverlay.cs）
     ├── GameController.cs       全局入口：创建并持有所有 manager
     └── UI/                     具体游戏界面（LoginPanel / MainPanel / LoadingPanel / SelectServerPanel）
 ```

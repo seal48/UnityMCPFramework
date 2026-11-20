@@ -6,6 +6,7 @@ using GameFramework.Core;
 using GameFramework.RedDot;
 using GameFramework.Environments;
 using GameFramework.Event;
+using GameFramework.Guide;
 using GameFramework.Log;
 using GameFramework.Localization;
 using GameFramework.Net.Client.Unity;
@@ -105,6 +106,7 @@ public class GameController : MonoBehaviour
     private PlatformManager platform;
     private LocalizationManager localization;
     private ServerSelectManager serverSelect;
+    private GuideManager guide;
 
     public static GameController Instance
     {
@@ -222,6 +224,15 @@ public class GameController : MonoBehaviour
         get { return serverSelect; }
     }
 
+    /// <summary>
+    /// 新手引导：GameController.Instance.Guide.Advance() / IsRunning / Started。
+    /// 步骤内容在 Guide.xlsx，进度存在服务端玩家属性（断线重连后自动续做）。
+    /// </summary>
+    public GuideManager Guide
+    {
+        get { return guide; }
+    }
+
     private void Awake()
     {
         // 常驻单例：已经有一个 GameController 活着时（比如误加载了带 GameController 的场景）销毁自己，
@@ -284,6 +295,9 @@ public class GameController : MonoBehaviour
         platform = new PlatformManager(platformOptions, events, ui, timer, gameClient);
         localization = new LocalizationManager(localizationOptions, config, resource, events, storage);
         serverSelect = new ServerSelectManager(config, storage, events);
+
+        // 新手引导：只创建，Init 放在 ProcedureInitPlatform（此时 UI / 存储 / 平台都已就绪）
+        guide = new GuideManager(events, ui, timer, config, localization, gameClient, business, platform, storage);
 
         // 启动流程：顺序就是依赖顺序，每一步做完自己切下一步
         procedures = new ProcedureManager(
@@ -397,6 +411,10 @@ public class GameController : MonoBehaviour
         if (ui != null)
             ui.Tick(Time.deltaTime, Time.unscaledDeltaTime);
 
+        // 新手引导：断线期间攒下的进度在重连后补发
+        if (guide != null)
+            guide.Tick(Time.deltaTime, Time.unscaledDeltaTime);
+
         // 平台适配：返回键 / 安全区 / 回前台断线处理
         if (platform != null)
             platform.Tick(Time.deltaTime, Time.unscaledDeltaTime);
@@ -430,6 +448,12 @@ public class GameController : MonoBehaviour
             return;
 
         instance = null;
+
+        if (guide != null)
+        {
+            guide.Shutdown();
+            guide = null;
+        }
 
         if (business != null)
         {
@@ -699,6 +723,10 @@ public class GameController : MonoBehaviour
 
         platform.Init();
         if (onComplete != null) onComplete(true, "平台适配已初始化");
+
+        // 平台就绪后再挂引导的返回键拦截（引导中吃掉返回键）
+        if (guide != null)
+            guide.Init();
     }
 
     /// <summary>把存档里的音量套到音频系统上（启动时 / 存档被改过之后）。</summary>

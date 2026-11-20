@@ -56,6 +56,9 @@ namespace GameFramework.Net.Server
                 LoginProtocols.Register(this, _options.LoginValidator ?? Accounts);
                 RegisterProtocols.Register(this, Accounts);
 
+                // 新手引导进度（存在玩家属性里，客户端可上报、只能前进不能回退）
+                GuideProtocols.Register(this, Accounts);
+
                 if (Accounts.List(1).Count == 0)
                     _logger.Warn("账号库里还没有任何账号，登录都会失败；用 server.AddAccount(账号, 密码) 或 AccountService.Register 添加。");
             }
