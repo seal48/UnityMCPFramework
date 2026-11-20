@@ -21,8 +21,8 @@
 ```
 Assets/
   Scripts/
-    Framework/        通用框架（17 个模块，32 个程序集）
-    Game/             示例业务：GameController + 启动流程 + UI + 业务系统
+    Framework/        通用框架（18 个模块目录，33 个程序集）
+    Game/             示例业务：GameController + 启动流程 + UI + 业务系统 + 新手引导
   Config/             Excel 配置表源文件（策划改这里）
   ConfigData/         客户端配置表产物（.bytes）
   ConfigDataServer/   服务端配置表产物（.bytes）
@@ -153,6 +153,20 @@ public void Rebind() { ... }
 真机 IL2CPP 构建时编成 DLL 从 `StreamingAssets/HotUpdate/` 动态加载；框架层 AOT 留在包里。
 入口：场景挂 AOT 的 `HybridCLRBoot` → 加载热更 DLL → 反射 `Game.HotEntry.Boot()` → `GameController.CreateRoot()`。
 
+```
+改业务代码后出包：
+1) 菜单 HybridCLR/CompileDll/ActiveBuildTarget       编译热更 DLL
+2) 把 HybridCLRData/HotUpdateDlls/<平台>/ 下的 Game.dll /
+   GameFramework.Business.dll / GameFramework.ServerSelect.dll
+   拷到 Assets/StreamingAssets/HotUpdate/
+3) 重建资源包（Tools/YooAsset/2 + 6 + 清 yoo/ 缓存）
+4) Tools/环境/构建/<环境> 出包
+```
+
+> 编辑器里不加载热更 DLL（直接用编译进编辑器的程序集），所以编辑器改代码不用重编 DLL。
+> 改 AOT 程序集后跑 `HybridCLR/Generate/All` 重新生成 `Assets/HybridCLRGenerate/`（别手动改）。
+> 详见 [`Assets/Scripts/Boot/README.md`](Assets/Scripts/Boot/README.md)。
+
 ### 红点系统
 
 ```
@@ -175,19 +189,37 @@ UI：给入口挂 RedDotBadge 组件（NodeId + ShowCount），自动显隐/计�
 > 树结构表驱动（可热更）、双模式点亮（推/拉）、事件驱动刷新（配 EventBus/Timer）。
 > 详见 [`Assets/Scripts/Framework/RedDotFramework/README.md`](Assets/Scripts/Framework/RedDotFramework/README.md)。
 
+### 新手引导（Guide）
+
 ```
-改业务代码后出包：
-1) 菜单 HybridCLR/CompileDll/ActiveBuildTarget       编译热更 DLL
-2) 把 HybridCLRData/HotUpdateDlls/<平台>/ 下的 Game.dll /
-   GameFramework.Business.dll / GameFramework.ServerSelect.dll
-   拷到 Assets/StreamingAssets/HotUpdate/
-3) 重建资源包（Tools/YooAsset/2 + 6 + 清 yoo/ 缓存）
-4) Tools/环境/构建/<环境> 出包
+配表：Assets/Config/Excel/Guide.xlsx
+  Id(位掩码 bit，1~62) / Group / Order / TargetPanel / TargetNode / TipKey /
+  Mask(Full/RectHole) / Shape(Rect/RoundRect/Circle) / Radius / ClickThrough /
+  AdvanceOn(ClickTarget/ClickAny/Timer/Manual) / AdvanceParam / Next / SkipAllowed
+文案：LocZh.xlsx / LocEn.xlsx 里按 TipKey 配（缺 key 会显示「缺 Loc 文案」）
+
+表现（AOT）：Framework/UIFramework/GuideOverlay.cs
+  Top 层遮罩，不用 shader、不需要美术切图：4 块 Image 拼洞口，
+  圆角/正圆用「运行时按 SDF 生成的镂空贴图」，带描边呼吸、气泡、跳过按钮、洞口点击代理
+逻辑（热更）：Game/Guide/GuideManager.cs
+  配表步骤机 + 断线暂停/续做 + 换账号复位 + 进度按账号本地镜像
+进度（服务端）：PlayerData.Attributes["guide_progress"]（位掩码，服务端只做「或」，只前进不回退）
 ```
 
-> 编辑器里不加载热更 DLL（直接用编译进编辑器的程序集），所以编辑器改代码不用重编 DLL。
-> 改 AOT 程序集后跑 `HybridCLR/Generate/All` 重新生成 `Assets/HybridCLRGenerate/`（别手动改）。
-> 详见 [`Assets/Scripts/Boot/README.md`](Assets/Scripts/Boot/README.md)。
+业务里怎么用：
+
+```csharp
+GameController.Instance.Guide.Advance();    // 手动让步（比如背包真正打开后才继续）
+GameController.Instance.Guide.IsRunning;    // 引导中（返回键已被拦截，不会误关面板）
+GameController.Instance.Guide.IsFinished;   // 走完或跳过
+Listen<GuideFinishedEvent>(...);            // 打点：GuideStarted / GuideStepChanged / GuideFinished
+```
+
+> 进大厅（`MainPanel` 打开）后自动启动；点目标 / 计时 / 手动推进；「跳过」= 整组标记完成、永不再弹。
+> 断线重连后服务端推 `player.info.push`（带全量属性）→ **从第一个未完成步骤续做**，不用自己存"第几步"。
+> 改引导步骤 = 改表 + `Tools/配置表/导出全部表` + 重建资源包（配置表在 bundle 里）。
+> 重置某账号的引导：`server.Accounts.SetAttribute("dev", "guide_progress", 0)`。
+> 详见 [`Assets/Scripts/Game/Guide/README.md`](Assets/Scripts/Game/Guide/README.md)。
 
 ## 框架能力
 
@@ -212,10 +244,11 @@ UI：给入口挂 RedDotBadge 组件（NodeId + ShowCount），自动显隐/计�
 | `Core` | 跨模块契约（`IGameModule` / `ITickable`） |
 | `HybridCLRBoot` | HybridCLR 代码热更引导（AOT，场景挂载）+ `GameOptions` 启动配置 |
 | `RedDotFramework` | 红点系统：树状结构（配表驱动）+ 推/拉双模式 + 事件驱动 + UI 组件 |
+| `Guide`（Game 层 + AOT 遮罩） | 新手引导：配表驱动步骤 + 遮罩挖洞高亮（矩形 / 圆角 / 正圆）+ 进度存服务端属性、断线续做 + 可跳过 |
 
 ## 程序集划分
 
-32 个程序集，纯 C# 部分（服务端也编译）标了 `noEngineReferences: true`：
+33 个程序集，纯 C# 部分（服务端也编译）标了 `noEngineReferences: true`：
 谁往里面写 `using UnityEngine;` 会**立刻编译报错**，而不是等服务端 `dotnet build` 才发现。
 
 详见 [`Assets/Scripts/README.md`](Assets/Scripts/README.md)。
