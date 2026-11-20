@@ -85,7 +85,7 @@ namespace GameFramework.UI.Editor
             // 预制体编辑模式（Prefab Stage）
             PrefabStage stage = PrefabStageUtility.GetCurrentPrefabStage();
             if (stage != null && stage.IsPartOfPrefabContents(panel.gameObject))
-                return stage.prefabAssetPath;
+                return stage.assetPath;
 
             // 场景里的预制体实例
             return PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(panel.gameObject);
