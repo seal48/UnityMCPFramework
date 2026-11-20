@@ -27,7 +27,7 @@ namespace GameFramework.Net.Client.Unity
 
         [Header("登录（Login() 用这两个值，也可以在运行时传参覆盖）")]
         [SerializeField] private string account = "dev";
-        [SerializeField] private string password = "dev";
+        [SerializeField] private string password = "dev123";
 
         [Header("行为")]
         [SerializeField] private bool logVerbose = true;

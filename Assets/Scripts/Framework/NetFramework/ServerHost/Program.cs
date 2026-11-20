@@ -120,12 +120,12 @@ namespace GameFramework.ServerHost
             {
                 if (server.Accounts.Exists("dev"))
                 {
-                    logger.Info("开发账号已存在：dev / dev");
+                    logger.Info("开发账号已存在：dev / dev123");
                 }
                 else
                 {
-                    server.AddAccount("dev", "dev", "player-dev");
-                    logger.Info("已创建开发账号：dev / dev（本地开发用；正式部署请换成自己的 ILoginValidator）");
+                    server.AddAccount("dev", "dev123", "player-dev");
+                    logger.Info("已创建开发账号：dev / dev123（本地开发用；正式部署请换成自己的 ILoginValidator）");
                 }
             }
 
@@ -1275,7 +1275,10 @@ namespace GameFramework.ServerHost
             logger.Info($"非法报文测试（nameLen = -5）：{(rejected ? "已拒绝 OK" : "未拒绝 FAIL")}");
 
             // 安全：协议加密开启时，篡改消息体（改一个字节）必须导致解密失败、按非法帧拒绝
-            if (NetConfig.EnableProtocolEncryption)
+            // 读进局部变量：EnableProtocolEncryption 是编译期常量，直接写 if 会让另一个分支
+            // 被编译器标记成 CS0162 不可达代码（自检里两个分支都保留，方便切换开关后直接跑）。
+            var encryptionEnabled = NetConfig.EnableProtocolEncryption;
+            if (encryptionEnabled)
             {
                 var tampered = (byte[])frame.Clone();
                 tampered[tampered.Length - 3] ^= 0x01;   // 改 body 最后一个字节附近

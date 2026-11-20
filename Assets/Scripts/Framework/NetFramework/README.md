@@ -271,7 +271,7 @@ net.LoginFailed += (b, response) => Debug.LogError($"登录失败：{response?.M
 
 ```csharp
 var client = new GameClient();
-var response = client.Login("127.0.0.1", 7777, "dev", "dev");
+var response = client.Login("127.0.0.1", 7777, "dev", "dev123");
 if (response.Success) { /* ... */ }
 ```
 
@@ -281,7 +281,7 @@ if (response.Success) { /* ... */ }
 
 ```csharp
 var server = new GameServer(new GameServerOptions { Port = 7777 });
-server.AddAccount("dev", "dev", "player-dev");   // 账号 / 密码 / playerId
+server.AddAccount("dev", "dev123", "player-dev");   // 账号 / 密码 / playerId
 server.Start();
 ```
 
@@ -481,7 +481,7 @@ client.ReconnectFailed += (c, reason) => ShowLoginPanel(); // 次数用尽，请
 ### 后端（独立进程，推荐）
 
 ```bash
-start-server.cmd                    # 工程根目录，监听 127.0.0.1:7777，自带开发账号 dev/dev
+start-server.cmd                    # 工程根目录，监听 127.0.0.1:7777，自带开发账号 dev/dev123
 start-server.cmd --port 9000        # 指定端口
 start-server.cmd --no-dev-account   # 不添加开发账号（所有登录都会失败，直到你自己加）
 start-server.cmd --selftest         # 全套自检：协议表 + 报文层 + 登录 + 心跳超时
@@ -513,8 +513,8 @@ start-server.cmd --web-root <目录>  # 手动指定资源根目录
 菜单 `Game Framework`：
 
 - `Start Local Server` / `Stop Local Server` / `Server Status`
-- `Dev Tools > 添加开发账号（dev/dev）`
-- `Dev Tools > 注册并登录（dev/dev）` —— 真的走一遍注册 + 登录 + 心跳，用来确认链路通
+- `Dev Tools > 添加开发账号（dev/dev123）`
+- `Dev Tools > 注册并登录（dev/dev123）` —— 真的走一遍注册 + 登录 + 心跳，用来确认链路通
 - `Dev Tools > 注册新账号并登录（自动命名）` —— 用 `tester-xxxxxx` 走一遍真实注册流程
 
 编辑器内起服务器时会顺带把资源站也拉起来（同样默认 8000 端口，根目录取工程根的 `ServerData`），
@@ -617,7 +617,7 @@ Unity 编辑器内实测（`Dev Tools > 登录并连接`）：
 [SERVER] 服务器已启动：127.0.0.1:7777（内容格式=json，最大连接=128）
 [框架] 服务器运行中：127.0.0.1:7777，在线连接 0，已登录 0，账号库=json（0 个账号）
 [SERVER] 账号已注册：account='dev'，playerId='player-dev'
-[SERVER] [client-1] 收到 'login.request'，内容 114 字节：{"Account":"dev","Password":"dev",...}
+[SERVER] [client-1] 收到 'login.request'，内容 114 字节：{"Account":"dev","Password":"dev123",...}
 [SERVER] [client-1] 登录成功：account='dev'，playerId='player-dev'，sessionId='ba5812ac...'
 [DEV] 登录成功：账号='dev'，playerId='player-dev'，服务器='editor-localserver'
 [框架] 心跳正常，往返 2ms（第 1 次）
@@ -631,7 +631,7 @@ Unity 编辑器内实测（`Dev Tools > 登录并连接`）：
   "Accounts": {
     "dev": {
       "Account": "dev",
-      "PasswordHash": "pbkdf2$sha256$100000$Q/96XQ/xh0Tz7b5p22e5ug==$Nxfg4Ld0J5KXt5zQpUA7sf0osqPHRajDoWjzcOTnOSg=",
+      "PasswordHash": "pbkdf2$sha256$100000$Q/96XQ/xh0Tz7b5p22e5ug==$q4DTMWsTySwa4QBh6n64v9uYmytW3iyK6irywYrc/iU=",
       "PlayerId": "player-dev",
       "CreatedAtMs": 1790066658000,
       "LastLoginMs": 1790066660372,

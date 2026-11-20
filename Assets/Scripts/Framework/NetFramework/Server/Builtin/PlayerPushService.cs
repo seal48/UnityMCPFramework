@@ -18,7 +18,7 @@ namespace GameFramework.Net.Server
     ///
     /// 用法（后端进程里）：
     ///   var push = new PlayerPushService(server);
-    ///   push.AddItem("dev", "1001", 5);     // 改数据 + 自动推送，客户端界面自己会变
+    ///   push.AddItem("dev", "1001", 5);     // 改数据 + 自动推送，客户端界面自己会变（账号 dev 的密码是 dev123）
     /// </summary>
     public sealed class PlayerPushService : IDisposable
     {

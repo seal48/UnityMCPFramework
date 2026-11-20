@@ -13,7 +13,7 @@ namespace GameFramework.Net.Client
     /// TCP 客户端（前端）。
     /// 用法：
     ///   var client = new GameClient();
-    ///   var response = client.Login("127.0.0.1", 7777, "dev", "dev");   // 连接 + 登录，成功后自动开始心跳
+    ///   var response = client.Login("127.0.0.1", 7777, "dev", "dev123");   // 连接 + 登录，成功后自动开始心跳
     ///   if (response.Success) client.Send(ProtocolId.PlayerMove, new MoveRequest { X = 1 });
     /// </summary>
     public sealed class GameClient : IMessagePeer, IDisposable

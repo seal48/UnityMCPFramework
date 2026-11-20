@@ -157,7 +157,7 @@ namespace GameFramework.Net.EditorTools
 
         // ---------------- 开发工具 ----------------
 
-        [MenuItem(DevMenuRoot + "添加开发账号（dev/dev）", priority = 20)]
+        [MenuItem(DevMenuRoot + "添加开发账号（dev/dev123）", priority = 20)]
         public static void AddDevAccount()
         {
             if (_server == null || !_server.IsRunning)
@@ -168,15 +168,15 @@ namespace GameFramework.Net.EditorTools
 
             if (_server.Accounts.Exists("dev"))
             {
-                Debug.Log("[框架] 开发账号已存在：dev / dev");
+                Debug.Log("[框架] 开发账号已存在：dev / dev123");
                 return;
             }
 
-            _server.AddAccount("dev", "dev", "player-dev");
-            Debug.Log("[框架] 已添加开发账号：dev / dev（playerId=player-dev）");
+            _server.AddAccount("dev", "dev123", "player-dev");
+            Debug.Log("[框架] 已添加开发账号：dev / dev123（playerId=player-dev）");
         }
 
-        [MenuItem(DevMenuRoot + "注册并登录（dev/dev）", priority = 21)]
+        [MenuItem(DevMenuRoot + "注册并登录（dev/dev123）", priority = 21)]
         public static void RegisterAndLogin()
         {
             var port = _server != null && _server.IsRunning ? _server.Port : PreferredPort;
@@ -189,16 +189,16 @@ namespace GameFramework.Net.EditorTools
                 client.ConnectionTimedOut += (c, message) => Debug.LogError($"[框架] {message} —— 已主动断开");
 
                 // 注册并登录：账号已存在时会直接走登录，所以这个菜单可以重复点
-                var response = client.RegisterAndLogin(NetConfig.DefaultHost, port, "dev", "dev");
+                var response = client.RegisterAndLogin(NetConfig.DefaultHost, port, "dev", "dev123");
 
                 if (response == null || !response.Success)
                 {
                     // 开发便利：本进程内的服务器上还没有 dev 账号时，直接补一个再用原密码登录
                     if (_server != null && _server.IsRunning && !_server.Accounts.Exists("dev"))
                     {
-                        _server.AddAccount("dev", "dev", "player-dev");
-                        Debug.Log("[框架] 账号库里没有 dev，已自动创建 dev / dev，重试登录…");
-                        response = client.Login(NetConfig.DefaultHost, port, "dev", "dev");
+                        _server.AddAccount("dev", "dev123", "player-dev");
+                        Debug.Log("[框架] 账号库里没有 dev，已自动创建 dev / dev123，重试登录…");
+                        response = client.Login(NetConfig.DefaultHost, port, "dev", "dev123");
                     }
 
                     if (response == null || !response.Success)
@@ -220,7 +220,7 @@ namespace GameFramework.Net.EditorTools
             }
         }
 
-        [MenuItem(DevMenuRoot + "注册并登录（dev/dev）", validate = true)]
+        [MenuItem(DevMenuRoot + "注册并登录（dev/dev123）", validate = true)]
         private static bool LoginValidate() => Application.isPlaying || _server != null;
 
         [MenuItem(DevMenuRoot + "注册新账号并登录（自动命名）", priority = 22)]
